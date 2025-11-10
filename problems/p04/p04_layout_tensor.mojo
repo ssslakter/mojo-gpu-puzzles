@@ -14,11 +14,12 @@ alias layout = Layout.row_major(SIZE, SIZE)
 fn add_10_2d(
     output: LayoutTensor[dtype, layout, MutAnyOrigin],
     a: LayoutTensor[dtype, layout, MutAnyOrigin],
-    size: Int,
+    size: UInt,
 ):
     row = thread_idx.y
     col = thread_idx.x
-    # FILL ME IN (roughly 2 lines)
+    if row < size and col < size:
+        output[row, col] = a[row,col] + 10
 
 
 # ANCHOR_END: add_10_2d_layout_tensor
@@ -46,7 +47,7 @@ def main():
         ctx.enqueue_function_checked[add_10_2d, add_10_2d](
             out_tensor,
             a_tensor,
-            SIZE,
+            UInt(SIZE),
             grid_dim=BLOCKS_PER_GRID,
             block_dim=THREADS_PER_BLOCK,
         )

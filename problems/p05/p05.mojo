@@ -14,11 +14,13 @@ fn broadcast_add(
     output: UnsafePointer[Scalar[dtype]],
     a: UnsafePointer[Scalar[dtype]],
     b: UnsafePointer[Scalar[dtype]],
-    size: Int,
+    size: UInt,
 ):
     row = thread_idx.y
     col = thread_idx.x
-    # FILL ME IN (roughly 2 lines)
+    if row < size and col < size:
+        output[row*size+col] = a[col] + b[row]
+
 
 
 # ANCHOR_END: broadcast_add
@@ -45,7 +47,7 @@ def main():
             out,
             a,
             b,
-            SIZE,
+            UInt(SIZE),
             grid_dim=BLOCKS_PER_GRID,
             block_dim=THREADS_PER_BLOCK,
         )
